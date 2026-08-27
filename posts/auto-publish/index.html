@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>內容發佈全自動 ｜ Brayden 布萊登</title>
+<meta name="description" content="從零設定 AI Agent 自動發文到 Threads 和 Instagram 的完整流程，含平台差異與五個實際踩過的坑。">
+<meta name="author" content="Brayden Chen">
+<link rel="canonical" href="https://hibraydenchen.github.io/brayden-assets/posts/auto-publish/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="內容發佈全自動">
+<meta property="og:description" content="從零設定 AI Agent 自動發文到 Threads 和 Instagram 的完整流程，含平台差異與五個實際踩過的坑。">
+<meta property="og:url" content="https://hibraydenchen.github.io/brayden-assets/posts/auto-publish/">
+<meta property="og:site_name" content="Brayden 布萊登">
+<meta property="article:published_time" content="2026-08-27">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="內容發佈全自動">
+<meta name="twitter:description" content="從零設定 AI Agent 自動發文到 Threads 和 Instagram 的完整流程，含平台差異與五個實際踩過的坑。">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+  .site-bar{
+    max-width:920px;margin:0 auto;padding:20px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    font-family:"Noto Sans TC",sans-serif;font-size:15px;
+  }
+  .site-bar a{color:#0A0D22;text-decoration:none;font-weight:700;}
+  .site-bar a:hover{text-decoration:underline;}
+  .site-bar .site-brand{display:flex;align-items:center;gap:10px;}
+  .site-bar img{width:34px;height:34px;border-radius:50%;display:block;}
+  .site-foot{
+    border-top:2px solid #E6E6E6;margin-top:40px;
+    color:#6B7280;font-size:14px;
+  }
+  .site-bar a:focus-visible{outline:3px solid #D5F000;outline-offset:3px;}
+</style>
+</head>
+<body>
+
+<nav class="site-bar">
+  <span class="site-brand"><img src="https://raw.githubusercontent.com/HiBraydenChen/brayden-assets/main/site/logo.png" alt=""><a href="../../">Brayden 布萊登</a></span>
+  <a href="https://braydenchen.me/">回主站 →</a>
+</nav>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap">
+
+<style>
+  :root{
+    --lime:#D5F000;
+    --navy:#0A0D22;
+    --cream:#FFFBF2;
+    --ink:#111111;
+    --slate:#6B7280;
+    --line:#E6E6E6;
+    --white:#FFFFFF;
+
+    --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+    --r:24px;
+    --maxw:920px;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-weight:400;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(var(--line) 1.2px, transparent 1.2px);
+    background-size:26px 26px;
+  }
+
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 24px 96px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:72px 0 56px;
+  }
+  .eyebrow{
+    display:inline-block;
+    background:var(--lime);
+    color:var(--navy);
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:.06em;
+    padding:8px 18px;
+    border-radius:999px;
+  }
+  h1{
+    font-weight:900;
+    font-size:clamp(52px,11vw,104px);
+    line-height:.98;
+    letter-spacing:-.03em;
+    margin:26px 0 0;
+    text-wrap:balance;
+  }
+  .rule{
+    width:132px;height:9px;background:var(--lime);
+    margin:26px 0 22px;
+  }
+  .lede{
+    font-size:clamp(17px,2.2vw,21px);
+    color:var(--slate);
+    max-width:34em;
+    margin:0;
+  }
+
+  .term{
+    margin-top:38px;
+    background:var(--navy);
+    border-radius:var(--r);
+    padding:26px 26px 28px;
+    font-family:var(--mono);
+    font-size:14px;
+    line-height:1.9;
+    color:var(--white);
+    overflow-x:auto;
+  }
+  .term .dots{display:flex;gap:7px;margin-bottom:18px;}
+  .term .dots i{width:11px;height:11px;border-radius:50%;background:#3A3F55;display:block;}
+  .term .dots i:first-child{background:var(--lime);}
+  .term .p{color:var(--lime);}
+  .term .c{color:#8A90A8;}
+
+  /* ---------- section frame ---------- */
+  section{padding-top:76px;}
+  .kicker{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.16em;
+    color:var(--slate);
+    text-transform:uppercase;
+  }
+  h2{
+    font-weight:900;
+    font-size:clamp(30px,5.4vw,46px);
+    line-height:1.12;
+    letter-spacing:-.02em;
+    margin:10px 0 14px;
+    text-wrap:balance;
+  }
+  .sub{
+    color:var(--slate);
+    font-size:17px;
+    margin:0 0 30px;
+    max-width:38em;
+  }
+  .mark{background:var(--lime);padding:0 .18em;}
+
+  /* ---------- pipeline diagram ---------- */
+  .diagram{
+    background:var(--white);
+    border:3px solid var(--navy);
+    border-radius:var(--r);
+    padding:26px 20px;
+    overflow-x:auto;
+  }
+  .diagram svg{display:block;min-width:660px;width:100%;height:auto;}
+
+  /* ---------- numbered steps ---------- */
+  .steps{
+    list-style:none;
+    margin:0;padding:0;
+    display:flex;flex-direction:column;gap:0;
+  }
+  .step{
+    display:grid;
+    grid-template-columns:64px 1fr;
+    gap:22px;
+    position:relative;
+    padding-bottom:34px;
+  }
+  .step:last-child{padding-bottom:0;}
+  .step::before{
+    content:"";
+    position:absolute;
+    left:31px;top:64px;bottom:0;
+    width:3px;background:var(--navy);
+  }
+  .step:last-child::before{display:none;}
+  .num{
+    width:64px;height:64px;border-radius:50%;
+    background:var(--navy);color:var(--white);
+    font-family:var(--mono);font-weight:700;font-size:19px;
+    display:flex;align-items:center;justify-content:center;
+    position:relative;z-index:1;
+  }
+  .step.key .num{background:var(--lime);color:var(--navy);}
+  .step h3{
+    font-size:23px;font-weight:900;margin:14px 0 8px;
+    letter-spacing:-.01em;
+  }
+  .step p{margin:0 0 12px;font-size:16.5px;}
+  .step .why{
+    color:var(--slate);font-size:15px;margin:0;
+  }
+  .cmd{
+    font-family:var(--mono);font-size:13.5px;
+    background:var(--navy);color:var(--white);
+    padding:12px 16px;border-radius:12px;
+    margin:12px 0 4px;overflow-x:auto;white-space:nowrap;
+  }
+  .cmd b{color:var(--lime);font-weight:400;}
+  .time{
+    display:inline-block;font-family:var(--mono);font-size:12px;
+    border:2px solid var(--navy);border-radius:999px;
+    padding:2px 12px;margin-left:10px;vertical-align:middle;
+    font-weight:700;
+  }
+
+  /* ---------- cards ---------- */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .card{
+    background:var(--white);
+    border:3px solid var(--navy);
+    border-radius:var(--r);
+    padding:24px 24px 26px;
+  }
+  .card.dark{background:var(--navy);border-color:var(--navy);color:var(--white);}
+  .card.dark .lbl{color:var(--lime);}
+  .card.dark p{color:#C9CCDA;}
+  .lbl{
+    font-family:var(--mono);font-size:12px;font-weight:700;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--slate);
+    margin:0 0 8px;
+  }
+  .card h4{font-size:20px;font-weight:900;margin:0 0 8px;letter-spacing:-.01em;}
+  .card p{margin:0;font-size:15.5px;color:var(--ink);}
+
+  /* ---------- contract / file tree ---------- */
+  .tree{
+    font-family:var(--mono);font-size:13.5px;line-height:2.05;
+    background:var(--white);border:3px solid var(--navy);
+    border-radius:var(--r);padding:24px 26px;overflow-x:auto;
+    white-space:pre;
+  }
+  .tree b{font-weight:700;}
+  .tree .g{color:var(--slate);}
+  .tree .hl{background:var(--lime);padding:1px 5px;border-radius:4px;}
+
+  /* ---------- table ---------- */
+  .tablewrap{overflow-x:auto;}
+  table{
+    border-collapse:collapse;width:100%;min-width:520px;
+    background:var(--white);
+    border:3px solid var(--navy);border-radius:var(--r);
+    overflow:hidden;
+  }
+  th,td{
+    text-align:left;padding:15px 18px;font-size:15.5px;
+    border-bottom:2px solid var(--line);
+  }
+  thead th{
+    background:var(--navy);color:var(--white);
+    font-size:13px;font-family:var(--mono);letter-spacing:.1em;
+    text-transform:uppercase;border-bottom:none;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  td:first-child{font-weight:700;}
+  td+td,th+th{text-align:center;font-variant-numeric:tabular-nums;}
+
+  /* ---------- traps ---------- */
+  .traps{display:flex;flex-direction:column;gap:14px;}
+  .trap{
+    display:grid;grid-template-columns:auto 1fr;gap:18px;
+    background:var(--white);border:3px solid var(--navy);
+    border-radius:var(--r);padding:20px 24px;
+  }
+  .trap .n{
+    font-family:var(--mono);font-weight:700;font-size:15px;
+    color:var(--navy);background:var(--lime);
+    width:38px;height:38px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    margin-top:2px;
+  }
+  .trap h4{margin:4px 0 6px;font-size:18.5px;font-weight:900;letter-spacing:-.01em;}
+  .trap p{margin:0;font-size:15.5px;color:var(--slate);}
+  .trap p b{color:var(--ink);font-weight:700;}
+
+  /* ---------- closer ---------- */
+  .closer{
+    margin-top:76px;
+    background:var(--navy);color:var(--white);
+    border-radius:var(--r);padding:48px 40px 44px;
+  }
+  .closer h2{color:var(--white);margin-top:8px;}
+  .closer .sub{color:#9AA0B4;}
+  .closer .term{margin-top:26px;background:#161B33;}
+
+  footer{
+    margin-top:44px;padding-top:26px;border-top:2px solid var(--line);
+    display:flex;justify-content:space-between;align-items:center;
+    flex-wrap:wrap;gap:12px;
+    font-size:14px;color:var(--slate);
+  }
+  footer b{color:var(--ink);font-weight:700;}
+
+  @media (max-width:680px){
+    .grid2{grid-template-columns:1fr;}
+    .step{grid-template-columns:48px 1fr;gap:16px;}
+    .num{width:48px;height:48px;font-size:16px;}
+    .step::before{left:23px;top:48px;}
+    .closer{padding:34px 24px 30px;}
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">CLAUDE CODE / CODEX 實作紀錄</span>
+    <h1>內容發佈<br>全自動</h1>
+    <div class="rule"></div>
+    <p class="lede">不必會寫程式。設定一次之後，AI Agent 就能把圖卡和文案自己發到 Threads 和 Instagram，一行指令兩個平台同時發完。</p>
+
+    <div class="term">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <span class="c"># 設定完之後，日常就只剩這一行</span><br>
+      <span class="p">$</span> python3 post_both.py <b>./今天的圖卡資料夾</b><br>
+      <span class="c">📤 上傳 5 張圖…  ✅ Threads 發布成功  ✅ Instagram 發布成功</span>
+    </div>
+  </header>
+
+  <section>
+    <span class="kicker">整條線長這樣</span>
+    <h2>素材進去，兩個平台出來</h2>
+    <p class="sub">中間那顆圖床是多數人卡住的地方。兩個平台的 API 都只接受公開網址，不能上傳本機檔案，所以圖片必須先有個家。</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 720 240" role="img" aria-label="流程圖：素材資料夾經過圖床，分別送往 Threads 與 Instagram">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#0A0D22"></path>
+          </marker>
+        </defs>
+
+        <!-- node 1 -->
+        <rect x="8" y="76" width="152" height="88" rx="16" fill="#FFFBF2" stroke="#0A0D22" stroke-width="3"></rect>
+        <text x="84" y="108" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#6B7280">STEP 1</text>
+        <text x="84" y="132" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-size="17" font-weight="900" fill="#111111">素材資料夾</text>
+        <text x="84" y="151" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-size="12" fill="#6B7280">圖片 + 兩份文案</text>
+
+        <line x1="164" y1="120" x2="212" y2="120" stroke="#0A0D22" stroke-width="3" marker-end="url(#ar)"></line>
+
+        <!-- node 2 : the blocker -->
+        <rect x="220" y="60" width="164" height="120" rx="16" fill="#D5F000" stroke="#0A0D22" stroke-width="3"></rect>
+        <text x="302" y="92" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#0A0D22">STEP 2</text>
+        <text x="302" y="118" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-size="19" font-weight="900" fill="#0A0D22">圖床</text>
+        <text x="302" y="140" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-size="12" fill="#0A0D22">GitHub 公開 repo</text>
+        <text x="302" y="158" text-anchor="middle" font-family="Noto Sans TC, sans-serif" font-size="12" fill="#0A0D22">本機檔 → 公開網址</text>
+
+        <line x1="388" y1="104" x2="440" y2="72" stroke="#0A0D22" stroke-width="3" marker-end="url(#ar)"></line>
+        <line x1="388" y1="136" x2="440" y2="168" stroke="#0A0D22" stroke-width="3" marker-end="url(#ar)"></line>
+
+        <!-- outputs -->
+        <rect x="448" y="26" width="264" height="72" rx="16" fill="#0A0D22"></rect>
+        <text x="472" y="58" font-family="Noto Sans TC, sans-serif" font-size="19" font-weight="900" fill="#FFFFFF">Threads</text>
+        <text x="472" y="80" font-family="Noto Sans TC, sans-serif" font-size="12" fill="#9AA0B4">輪播 2-20 張・繁中 Topic・可自動留言</text>
+
+        <rect x="448" y="142" width="264" height="72" rx="16" fill="#0A0D22"></rect>
+        <text x="472" y="174" font-family="Noto Sans TC, sans-serif" font-size="19" font-weight="900" fill="#FFFFFF">Instagram</text>
+        <text x="472" y="196" font-family="Noto Sans TC, sans-serif" font-size="12" fill="#9AA0B4">輪播 2-10 張・要 hashtag・不能純文字</text>
+      </svg>
+    </div>
+  </section>
+
+  <section>
+    <span class="kicker">SETUP</span>
+    <h2>四個步驟，一次設定完</h2>
+    <p class="sub">Threads 很快就好。Instagram 是整趟裡最花時間的一段，關卡多，而且順序錯了要重來。</p>
+
+    <ol class="steps">
+
+      <li class="step">
+        <div class="num">01</div>
+        <div>
+          <h3>拿 Threads 的鑰匙<span class="time">約 5 分鐘</span></h3>
+          <p>到 Meta 開發者後台建一個 App，加上 Threads 的用途，產生 access token。</p>
+          <p class="why">效期 60 天，到期前刷新一次就好，不用重新申請。</p>
+        </div>
+      </li>
+
+      <li class="step key">
+        <div class="num">02</div>
+        <div>
+          <h3>架一個圖床<span class="time">約 10 分鐘</span></h3>
+          <p>開一個 <b>public</b> 的 GitHub repo 當圖床，再產一把 fine-grained token，權限只要勾 <span class="mark">Contents: Read and write</span>。</p>
+          <p class="why">為什麼需要這個：Threads 和 IG 的 API 都只吃公開網址。你桌面上的圖，API 根本看不到。這是整趟最容易漏掉的一步，因為文件不會提醒你。</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="num">03</div>
+        <div>
+          <h3>拿 Instagram 的鑰匙<span class="time">約 40 分鐘</span></h3>
+          <p>四道關卡缺一不可，而且必須照順序：</p>
+          <p class="why">
+            ① IG 轉專業帳號並連結 Facebook 粉專<br>
+            ② Meta App 加入 Instagram 用途，選「Instagram business login」這條路，不要選需要送審的那條<br>
+            ③ <b>先</b>補上發文權限 <code style="font-family:var(--mono);font-size:13px;">instagram_business_content_publish</code><br>
+            ④ 把自己的 IG 加成 Instagram Tester，<b>然後去 instagram.com 接受邀請</b>
+          </p>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="num">04</div>
+        <div>
+          <h3>給 Agent 一份說明書<span class="time">一次寫好</span></h3>
+          <p>把指令用法、資料夾規格、平台限制、踩過的坑寫成一份 <code style="font-family:var(--mono);font-size:13px;">AGENTS.md</code> 或 <code style="font-family:var(--mono);font-size:13px;">CLAUDE.md</code>，放在工具資料夾裡。</p>
+          <p class="why">這份文件才是真正讓它「自動」的東西。沒有它，你每次都要重講一遍。</p>
+        </div>
+      </li>
+
+    </ol>
+  </section>
+
+  <section>
+    <span class="kicker">THE CONTRACT</span>
+    <h2>Agent 只要產出這個資料夾</h2>
+    <p class="sub">這是 AI 跟發布工具之間的介面。檔名和結構對了，剩下的完全不用管。</p>
+
+    <div class="tree"><b>某個主題/</b>
+<span class="g">├─</span> <span class="hl">xxx-01.jpg</span>            <span class="g">圖片，檔名結尾一定要有編號</span>
+<span class="g">├─</span> xxx-02.jpg            <span class="g">1080 × 1350，JPEG，兩邊都通吃</span>
+<span class="g">├─</span> xxx-03.jpg
+<span class="g">├─</span> <span class="hl">threads-copy.txt</span>      <span class="g">Threads 文案，不放 hashtag</span>
+<span class="g">└─</span> <span class="hl">instagram-caption.txt</span> <span class="g">IG 文案，要放 hashtag</span></div>
+
+    <div class="grid2" style="margin-top:18px;">
+      <div class="card">
+        <p class="lbl">兩份文案不能共用</p>
+        <h4>語感不一樣</h4>
+        <p>Threads 偏口語短促、不放標籤；IG 資訊量可以多一點，標籤放最後一行。</p>
+      </div>
+      <div class="card dark">
+        <p class="lbl">自動忽略</p>
+        <h4>雜檔不用清</h4>
+        <p>預覽圖、插圖草稿、.DS_Store 這些會被自動跳過，只挑帶編號的素材。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="kicker">差異</span>
+    <h2>同一組素材，兩套規則</h2>
+    <p class="sub">用 1080 × 1350 的 JPEG，兩邊都安全，不用做兩份圖。</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>項目</th><th>Threads</th><th>Instagram</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>輪播張數</td><td>2 到 20</td><td>2 到 10</td></tr>
+          <tr><td>長寬比</td><td>幾乎不限</td><td>4:5 到 1.91:1</td></tr>
+          <tr><td>純文字貼文</td><td>可以</td><td>不行</td></tr>
+          <tr><td>Hashtag</td><td>不用</td><td>要</td></tr>
+          <tr><td>自動留言放連結</td><td>可以</td><td>不行</td></tr>
+          <tr><td>每日發文上限</td><td>250</td><td>100</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <span class="kicker">實際踩過的坑</span>
+    <h2>這五個會讓你卡住</h2>
+    <p class="sub">全部都是這次設定過程中真的撞到的，不是理論上可能發生。</p>
+
+    <div class="traps">
+
+      <div class="trap">
+        <div class="n">1</div>
+        <div>
+          <h4>權限順序錯了，token 要重產</h4>
+          <p>token 會把當下的權限烙進去。<b>先補發文權限，再產 token</b>。反過來的話，token 拿到也發不出去，整段重來。</p>
+        </div>
+      </div>
+
+      <div class="trap">
+        <div class="n">2</div>
+        <div>
+          <h4>Tester 邀請要去 Instagram 那邊接受</h4>
+          <p>在 App 後台加完 Instagram Tester 只做了一半。<b>還要登入 instagram.com 接受邀請</b>，否則授權會被擋，而錯誤訊息完全看不出原因。</p>
+        </div>
+      </div>
+
+      <div class="trap">
+        <div class="n">3</div>
+        <div>
+          <h4>圖還沒處理完就送出，直接 400</h4>
+          <p>發輪播時平台需要時間把每張圖抓下來。<b>要等每一張的狀態變成 FINISHED 再組合</b>，否則回一個沒有說明的 400。圖越多越容易踩到。</p>
+        </div>
+      </div>
+
+      <div class="trap">
+        <div class="n">4</div>
+        <div>
+          <h4>Topic 標籤發出去就改不了</h4>
+          <p>Threads 沒有編輯 topic 的方法。<b>一律用繁體中文，發之前確認</b>。IG 的文案倒是可以在 App 裡手動改。</p>
+        </div>
+      </div>
+
+      <div class="trap">
+        <div class="n">5</div>
+        <div>
+          <h4>圖床是 public，別放還沒公開的東西</h4>
+          <p>圖片一上傳就是公開可見。<b>只放確定要發出去的素材</b>。用內容雜湊當檔名，同一張重傳不會產生重複檔。</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <span class="kicker">額外收穫</span>
+    <h2>順手解掉的圖卡問題</h2>
+
+    <div class="grid2">
+      <div class="card">
+        <p class="lbl">為什麼字總是太小</p>
+        <h4>字級是被字數決定的</h4>
+        <p>1080 寬扣掉邊距約 970。主標一行 7 個字最大只能到 138px，斷成兩行 4 字就能到 243px。<span class="mark">同一句話，斷行就大一倍。</span></p>
+      </div>
+      <div class="card">
+        <p class="lbl">生圖模型的極限</p>
+        <h4>Logo 和中文字別交給它</h4>
+        <p>模型畫不出真正的品牌 Logo，繁中筆畫也常出錯。讓它只生背景和插圖，Logo 用程式疊上去，字級才會每張都一致。</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="closer">
+    <span class="eyebrow">設定完之後</span>
+    <h2>日常就只剩三步</h2>
+    <p class="sub">從素材到兩個平台上線，大約一分鐘。</p>
+
+    <div class="term">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <span class="c"># 1. 把真的 Logo 蓋上去，順便產縮圖檢查表</span><br>
+      <span class="p">$</span> python3 brand_slides.py <b>./資料夾</b><br><br>
+      <span class="c"># 2. 先預覽，確認圖和文案都對</span><br>
+      <span class="p">$</span> python3 post_both.py <b>./資料夾/branded</b> --dry-run<br><br>
+      <span class="c"># 3. 兩個平台一起發</span><br>
+      <span class="p">$</span> python3 post_both.py <b>./資料夾/branded</b>
+    </div>
+  </div>
+
+  <footer>
+    <span><b>Brayden 布萊登</b> ・ @BraydenChen</span>
+    <span>一天內從零設定完成</span>
+  </footer>
+
+</div>
+
+
+<div class="site-bar site-foot">
+  <span>Brayden 布萊登　2026-08-27</span>
+  <a href="../../">看更多文章 →</a>
+</div>
+
+</body>
+</html>
